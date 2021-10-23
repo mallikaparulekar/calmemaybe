@@ -1,7 +1,6 @@
 # Download the helper library from https://www.twilio.com/docs/python/install
 import os
 import sys
-sys.path.append("/Users/mallikaparulekar/opt/anaconda3/lib/python3.8/site-packages/")
 from twilio.rest import Client
 
 
@@ -16,7 +15,7 @@ message = client.messages \
                 .create(
                      body="we're basically amazing.",
                      from_='+14703478946',
-                     to='+16504417802'
+                     to='+14088324361'
                  )
 
 print(message.sid)
