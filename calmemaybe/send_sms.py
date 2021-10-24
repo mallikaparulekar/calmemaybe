@@ -1,15 +1,20 @@
 # Download the helper library from https://www.twilio.com/docs/python/install
 import os
+from os import environ
 import sys
 from twilio.rest import Client
+# from dotenv import load_dotenv
 
+# load_dotenv()
 
 # Find your Account SID and Auth Token at twilio.com/console
 # and set the environment variables. See http://twil.io/secure
 
 def send_informational_message(receiving_phone_num_str, person_name, time ):
-    account_sid = os.environ['TWILIO_ACCOUNT_SID']
-    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    # account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+    # auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+    account_sid = 'xxxxxxxxxx'
+    auth_token = 'xxxxxxxxxx'
     client = Client(account_sid, auth_token)
     message = client.messages \
                     .create(
@@ -20,8 +25,9 @@ def send_informational_message(receiving_phone_num_str, person_name, time ):
     print(message.sid)
 
 def send_emergency_message(receiving_phone_num_str, person_name):
-    account_sid = os.environ['TWILIO_ACCOUNT_SID']
-    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    account_sid = 'xxxxxxxxxx'
+    auth_token = 'xxxxxxxxxx'
+    print(account_sid, auth_token)
     client = Client(account_sid, auth_token)
     message = client.messages \
                     .create(
@@ -30,3 +36,5 @@ def send_emergency_message(receiving_phone_num_str, person_name):
                         to=receiving_phone_num_str
                     )
     print(message.sid)
+
+
