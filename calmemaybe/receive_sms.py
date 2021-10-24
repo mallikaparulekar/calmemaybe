@@ -1,6 +1,41 @@
 from flask import Flask, request, redirect
 from flask_ngrok import run_with_ngrok
 from twilio.twiml.messaging_response import MessagingResponse
+import threading
+import os
+
+# Download the helper library from https://www.twilio.com/docs/python/install
+import os
+import sys
+from twilio.rest import Client
+
+
+# Find your Account SID and Auth Token at twilio.com/console
+# and set the environment variables. See http://twil.io/secure
+
+def send_informational_message(receiving_phone_num_str, person_name, time ):
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
+    message = client.messages \
+                    .create(
+                        body="your friend {0} has started a trip. they plan to reach in {1} minutes. just thought you should know :) ".format(person_name, time),
+                        from_='+14703478946',
+                        to=receiving_phone_num_str
+                    )
+    print(message.sid)
+
+def send_emergency_message(receiving_phone_num_str, person_name):
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
+    message = client.messages \
+                    .create(
+                        body="your friend {} has not indicated that they have reached their destination on time. danger!!! ".format(person_name),
+                        from_='+14703478946',
+                        to=receiving_phone_num_str
+                    )
+    print(message.sid)
 
 app = Flask(__name__)
 run_with_ngrok(app)
@@ -21,10 +56,13 @@ def sms_reply():
     #check if message is Y
     elif body == 'Y':
         resp.message("awesome! when do you expect to reach? tell us how many minutes (ex: 16)")
+
     
     # #to check is string is a number in string form with a null check
     elif body and body.isnumeric():
         resp.message("great! we'll let your contacts know - bon voyage :). If you want to log a delay at any point, type D")
+        send_emergency_message("+16504417802", "kalie")
+        send_informational_message("+18585681775", "kalie", str(body))
 
     elif body and "arrive" in body:
         resp.message("thanks for using calmemaybe, glad you're safe :)")
@@ -41,20 +79,4 @@ def sms_reply():
 
 
 if __name__ == "__main__":
-    #app.run(debug=True)
     app.run()
-
-
-
-# from flask import Flask
-# from flask_ngrok import run_with_ngrok
-  
-# app = Flask(__name__)
-# run_with_ngrok(app)
-  
-# @app.route("/")
-# def hello():
-#     return "Hello Geeks!! from Google Colab"
-  
-# if __name__ == "__main__":
-#   app.run()
